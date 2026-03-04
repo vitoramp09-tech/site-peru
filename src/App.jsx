@@ -1,12 +1,36 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { bourdainTribute, itinerary, tipBank, travelers } from './data/tripData';
-import { HeroSection } from './components/sections/HeroSection';
-import { TravelersSection } from './components/sections/TravelersSection';
-import { HighlightsSection } from './components/sections/HighlightsSection';
-import { ItinerarySection } from './components/sections/ItinerarySection';
-import { PackingSection } from './components/sections/PackingSection';
-import { BourdainSection } from './components/sections/BourdainSection';
-import { ClosingSection } from './components/sections/ClosingSection';
+import {
+  MapPin,
+  Plane,
+  Mountain,
+  Camera,
+  Coffee,
+  Train,
+  Heart,
+  Users,
+  Sparkles,
+  Loader2,
+  Utensils,
+  Landmark,
+  Sun,
+  ChevronDown,
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// --- Componentes UI Integrados (Substituindo @/components/ui) ---
+const Card = ({ className, children, ...props }) => (
+  <div className={className} {...props}>{children}</div>
+);
+const CardContent = ({ className, children, ...props }) => (
+  <div className={className} {...props}>{children}</div>
+);
+const Badge = ({ className, children, ...props }) => (
+  <span className={`inline-flex items-center ${className}`} {...props}>{children}</span>
+);
+const Button = ({ className, children, ...props }) => (
+  <button className={`inline-flex items-center justify-center ${className}`} {...props}>{children}</button>
+);
+// ----------------------------------------------------------------
 
 export default function App() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -40,13 +64,238 @@ export default function App() {
     return () => clearInterval(interval);
   }, [tripDate]);
 
+  const itinerary = [
+    {
+      date: '22/08',
+      title: 'Chegada em Cusco',
+      city: 'Cusco',
+      desc: 'Aclimatação, primeiros passeios pelo centro histórico e contato inicial com a atmosfera andina.',
+      highlight: 'História, altitude e charme colonial.',
+      icon: MapPin,
+      tags: ['Aclimatação', 'Centro histórico', 'Cultura'],
+    },
+    {
+      date: '23/08',
+      title: 'Explorando Cusco',
+      city: 'Cusco',
+      desc: 'Dia para mercados, sítios arqueológicos, igrejas, ruas de pedra e gastronomia local.',
+      highlight: 'O berço da história peruana.',
+      icon: Camera,
+      tags: ['Arqueologia', 'Mercados', 'Gastronomia'],
+    },
+    {
+      date: '24/08',
+      title: 'Cusco e Preparativos',
+      city: 'Cusco',
+      desc: 'Último dia de adaptação, descanso, organização da mochila e preparação para a trilha.',
+      highlight: 'Respirar, ajustar o ritmo e preparar o corpo.',
+      icon: Coffee,
+      tags: ['Descanso', 'Planejamento', 'Pré-trilha'],
+    },
+    {
+      date: '25/08',
+      title: 'Trilha Inca, Dia 1',
+      city: 'Andes peruanos',
+      desc: 'Início da jornada de 4 dias por trilhas ancestrais entre montanhas e ruínas incas.',
+      highlight: 'A aventura começa de verdade.',
+      icon: Mountain,
+      tags: ['Trekking', 'Andes', 'Aventura'],
+    },
+    {
+      date: '26/08',
+      title: 'Trilha Inca, Dia 2',
+      city: 'Andes peruanos',
+      desc: 'Trecho mais desafiador da travessia, com altitude, superação e visuais impressionantes.',
+      highlight: 'Força, altitude e paisagens épicas.',
+      icon: Mountain,
+      tags: ['Altitude', 'Desafio', 'Paisagem'],
+    },
+    {
+      date: '27/08',
+      title: 'Trilha Inca, Dia 3',
+      city: 'Andes peruanos',
+      desc: 'Transição entre montanhas, mata e ruínas, vivendo os diferentes microclimas do caminho.',
+      highlight: 'A trilha revela toda a sua diversidade.',
+      icon: Mountain,
+      tags: ['Ruínas', 'Microclimas', 'Natureza'],
+    },
+    {
+      date: '28/08',
+      title: 'Machu Picchu e Vale Sagrado',
+      city: 'Machu Picchu / Ollantaytambo',
+      desc: 'Chegada ao lugar mais icônico da viagem, seguida de descida para o Vale Sagrado.',
+      highlight: 'O grande símbolo do Peru.',
+      icon: Landmark,
+      tags: ['Machu Picchu', 'Ícone', 'Patrimônio'],
+    },
+    {
+      date: '29/08',
+      title: 'Vale Sagrado',
+      city: 'Ollantaytambo e arredores',
+      desc: 'Dia de imersão em vilarejos incas, feiras, artesanato, cultura local e experiências mais raiz.',
+      highlight: 'A alma viva do Peru andino.',
+      icon: Users,
+      tags: ['Vilarejos', 'Feirinhas', 'Cultura local'],
+    },
+    {
+      date: '30/08',
+      title: 'Lagoa Humantay',
+      city: 'Região de Cusco',
+      desc: 'Passeio de natureza e altitude para uma lagoa de cor intensa cercada por montanhas.',
+      highlight: 'Uma das paisagens mais impactantes da rota.',
+      icon: Sun,
+      tags: ['Natureza', 'Altitude', 'Visual'],
+    },
+    {
+      date: '31/08',
+      title: 'Ida para Arequipa',
+      city: 'Arequipa',
+      desc: 'Deslocamento para a Cidade Branca, famosa por sua arquitetura, cenário vulcânico e vida cultural.',
+      highlight: 'Mudança de ritmo e de paisagem.',
+      icon: Train,
+      tags: ['Transporte', 'Cidade Branca', 'Arquitetura'],
+    },
+    {
+      date: '01/09',
+      title: 'Descobrindo Arequipa',
+      city: 'Arequipa',
+      desc: 'Dia para explorar praças, mosteiros, mirantes e o charme elegante da cidade.',
+      highlight: 'Cultura, pedra vulcânica e beleza urbana.',
+      icon: Camera,
+      tags: ['Centro histórico', 'Cultura', 'Mirantes'],
+    },
+    {
+      date: '02/09',
+      title: 'Arequipa e Gastronomia',
+      city: 'Arequipa',
+      desc: 'Foco nos sabores do sul peruano e nos últimos momentos antes de seguir para Nazca.',
+      highlight: 'Uma pausa deliciosa no roteiro.',
+      icon: Utensils,
+      tags: ['Comida', 'Experiência local', 'Sul do Peru'],
+    },
+    {
+      date: '03/09',
+      title: 'Linhas de Nazca e Oásis',
+      city: 'Nazca / Huacachina',
+      desc: 'Sobrevoo dos geoglifos de Nazca e sequência da viagem rumo ao deserto e ao oásis.',
+      highlight: 'Mistério arqueológico e mudança total de cenário.',
+      icon: Plane,
+      tags: ['Sobrevoo', 'Nazca', 'Deserto'],
+    },
+    {
+      date: '04/09',
+      title: 'Huacachina e Ida a Lima',
+      city: 'Huacachina / Lima',
+      desc: 'Dia de buggy, sandboard, dunas e pôr do sol antes do deslocamento para a capital.',
+      highlight: 'Aventura no deserto com clima cinematográfico.',
+      icon: Mountain,
+      tags: ['Buggy', 'Sandboard', 'Pôr do sol'],
+    },
+    {
+      date: '05/09',
+      title: 'Chegada em Lima',
+      city: 'Lima',
+      desc: 'Entrada na fase mais leve da viagem, com bairros charmosos, mar e vida urbana.',
+      highlight: 'As férias das férias.',
+      icon: MapPin,
+      tags: ['Miraflores', 'Barranco', 'Capital'],
+    },
+    {
+      date: '06/09',
+      title: 'Lima Gastronômica',
+      city: 'Lima',
+      desc: 'Dia para viver a alta gastronomia peruana, explorar cafés, restaurantes e encerrar a viagem em grande estilo.',
+      highlight: 'Sabores que viram memória.',
+      icon: Heart,
+      tags: ['Alta gastronomia', 'Restaurantes', 'Despedida'],
+    },
+    {
+      date: '07/09',
+      title: 'Retorno para Casa',
+      city: 'Lima → Brasil',
+      desc: 'Fim da Peru Trip, com bagagens cheias de histórias, fotos e lembranças para a vida toda.',
+      highlight: 'Encerramento de uma jornada épica.',
+      icon: Plane,
+      tags: ['Retorno', 'Memórias', 'Fim da viagem'],
+    },
+  ];
+
+  const travelers = [
+    { name: 'Vitor', role: 'Explorador', color: 'from-sky-500 to-blue-600' },
+    { name: 'Carina', role: 'Aventureira', color: 'from-pink-500 to-rose-600' },
+    { name: 'Julia', role: 'A Conquistadora', color: 'from-emerald-500 to-green-600' },
+    { name: 'Kyle', role: 'O Forasteiro', color: 'from-amber-500 to-orange-600' },
+  ];
+
+  const bourdainTribute = [
+    {
+      city: 'Lima',
+      place: 'La Picantería',
+      type: 'Restaurante',
+      reason: 'Ceviches, tiraditos e frutos do mar em um clima autêntico e vibrante.',
+      bourdainSpot: true,
+    },
+    {
+      city: 'Lima',
+      place: 'Mercado de Surquillo',
+      type: 'Experiência',
+      reason: 'Explorar ingredientes locais, frutas andinas e a energia real da cozinha peruana.',
+      bourdainSpot: true,
+    },
+    {
+      city: 'Cusco',
+      place: 'Pachapapa',
+      type: 'Restaurante',
+      reason: 'Sabores andinos tradicionais em ambiente acolhedor no bairro de San Blas.',
+      bourdainSpot: false,
+    },
+    {
+      city: 'Arequipa',
+      place: 'Picantería La Nueva Palomino',
+      type: 'Restaurante',
+      reason: 'Clássicos arequipenhos para viver o lado mais raiz e robusto da culinária local.',
+      bourdainSpot: false,
+    },
+    {
+      city: 'Lima',
+      place: 'Barranco + tour de cafés especiais',
+      type: 'Experiência',
+      reason: 'Misturar cultura de bairro, arte e cafés para desacelerar no final da viagem.',
+      bourdainSpot: false,
+    },
+    {
+      city: 'Cusco',
+      place: 'Mercado San Pedro',
+      type: 'Experiência',
+      reason: 'Lanches locais, sucos e o cotidiano da cidade em uma experiência popular.',
+      bourdainSpot: false,
+    },
+  ];
+
+  const tipBank = {
+    'Chegada em Cusco': 'No primeiro dia em Cusco, o ideal é ir com calma, beber bastante água e evitar esforço excessivo por causa da altitude.',
+    'Explorando Cusco': 'Prove pratos locais em mercados e repare como a cidade mistura base inca com construções coloniais em quase cada rua.',
+    'Cusco e Preparativos': 'Separe roupas em camadas, porque a temperatura pode mudar bastante entre manhã, tarde e noite.',
+    'Trilha Inca, Dia 1': 'Começar num ritmo conservador ajuda muito, porque a trilha recompensa constância mais do que velocidade.',
+    'Trilha Inca, Dia 2': 'O segundo dia costuma ser o mais exigente, então alimentação leve e hidratação fazem muita diferença.',
+    'Trilha Inca, Dia 3': 'Ao longo da trilha, observe as mudanças de vegetação, elas mostram bem como os Andes criam microclimas únicos.',
+    'Machu Picchu e Vale Sagrado': 'Chegar a Machu Picchu depois da trilha torna a experiência ainda mais simbólica e emocional.',
+    'Vale Sagrado': 'Nos vilarejos do Vale Sagrado, vale olhar com calma os tecidos, cerâmicas e produtos artesanais feitos por comunidades locais.',
+    'Lagoa Humantay': 'Saia cedo, leve proteção solar e respeite o ritmo do corpo, porque a altitude pesa mesmo em percursos curtos.',
+    'Ida para Arequipa': 'Arequipa tem uma energia diferente de Cusco, mais urbana, elegante e muito ligada à arquitetura em pedra vulcânica.',
+    'Descobrindo Arequipa': 'O contraste entre o branco das fachadas e os vulcões ao redor deixa a cidade ainda mais bonita no fim da tarde.',
+    'Arequipa e Gastronomia': 'A culinária arequipenha tem personalidade própria, com pratos mais robustos e tradicionais.',
+    'Linhas de Nazca e Oásis': 'O voo sobre Nazca é curto, então vale chegar bem organizado para aproveitar cada minuto da experiência.',
+    'Huacachina e Ida a Lima': 'Em Huacachina, o pôr do sol costuma ser um dos momentos mais marcantes do dia, especialmente no alto das dunas.',
+    'Chegada em Lima': 'Barranco e Miraflores entregam dois lados muito interessantes de Lima, um mais boêmio, outro mais clássico e costeiro.',
+    'Lima Gastronômica': 'Lima é o lugar ideal para fechar a viagem com ceviches, menus degustação e ótimos cafés.',
+    'Retorno para Casa': 'O último dia é perfeito para revisar fotos, anotar memórias e salvar lugares favoritos para uma próxima viagem.',
+  };
+
   const handleGenerateTip = async (index, day) => {
     setLoadingTipDay(index);
     await new Promise((resolve) => setTimeout(resolve, 900));
-    setDailyTips((prev) => ({
-      ...prev,
-      [index]: tipBank[day.title] || 'Curtam o dia com calma e deixem espaço para surpresas boas no caminho.',
-    }));
+    setDailyTips((prev) => ({ ...prev, [index]: tipBank[day.title] || 'Curtam o dia com calma e deixem espaço para surpresas boas no caminho.' }));
     setLoadingTipDay(null);
   };
 
@@ -72,26 +321,315 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
-      <HeroSection timeLeft={timeLeft} />
+      <section className="relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=1800&q=80')",
+          }}
+        />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/40 via-neutral-950/40 to-neutral-950" />
+
+        <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="max-w-4xl"
+          >
+            <Badge className="mb-5 rounded-full border border-amber-300/30 bg-amber-400/10 px-4 py-1 text-amber-200">
+              Peru Trip 2026
+            </Badge>
+            <h1 className="text-5xl font-black tracking-tight md:text-7xl">
+              Uma jornada pelo Peru,
+              <span className="block text-amber-300">gastronomia, aventura, história e cultura</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-neutral-200 md:text-xl">
+              Cusco, Trilha Inca, Machu Picchu, Vale Sagrado, Arequipa, Nazca, Huacachina e Lima em uma viagem desenhada para viver o Peru por inteiro.
+            </p>
+
+            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4 max-w-3xl">
+              {[
+                { label: 'Dias', value: timeLeft.days },
+                { label: 'Horas', value: timeLeft.hours },
+                { label: 'Minutos', value: timeLeft.minutes },
+                { label: 'Segundos', value: timeLeft.seconds },
+              ].map((item) => (
+                <Card key={item.label} className="rounded-3xl border-white/10 bg-white/10 text-white backdrop-blur-md">
+                  <CardContent className="p-5 text-center">
+                    <div className="text-3xl font-black md:text-4xl">{String(item.value).padStart(2, '0')}</div>
+                    <div className="mt-2 text-xs uppercase tracking-[0.25em] text-neutral-300">{item.label}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       <main className="mx-auto max-w-6xl px-6 pb-20">
-        <TravelersSection travelers={travelers} />
-        <HighlightsSection />
-        <ItinerarySection
-          itinerary={itinerary}
-          activeDay={activeDay}
-          setActiveDay={setActiveDay}
-          dailyTips={dailyTips}
-          loadingTipDay={loadingTipDay}
-          onGenerateTip={handleGenerateTip}
-        />
-        <PackingSection
-          packingList={packingList}
-          isGeneratingPacking={isGeneratingPacking}
-          onGeneratePackingList={handleGeneratePackingList}
-        />
-        <BourdainSection bourdainTribute={bourdainTribute} />
-        <ClosingSection />
+        <section className="-mt-10 grid gap-6 md:grid-cols-4">
+          {travelers.map((person, index) => (
+            <motion.div
+              key={person.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.08 * index }}
+            >
+              <Card className="rounded-3xl border-white/10 bg-white/5 text-white shadow-2xl backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${person.color}`}>
+                    <Heart className="h-8 w-8" />
+                  </div>
+                  <h3 className="mt-4 text-xl font-bold">{person.name}</h3>
+                  <p className="mt-1 text-sm text-neutral-300">{person.role}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </section>
+
+        <section className="mt-16 grid gap-6 md:grid-cols-4">
+          {[
+            { icon: Utensils, title: 'Gastronomia', text: 'Da alta cozinha de Lima aos sabores tradicionais do sul peruano.' },
+            { icon: Mountain, title: 'Aventura', text: 'Trilha Inca, altitude, lagoas andinas, deserto e sandboard.' },
+            { icon: Landmark, title: 'História', text: 'Mundo inca, cidades coloniais e mistérios arqueológicos.' },
+            { icon: Sparkles, title: 'Cultura', text: 'Feiras, vilarejos, artesanato, arquitetura e cotidiano local.' },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <Card key={item.title} className="rounded-3xl border-white/10 bg-neutral-900 text-white">
+                <CardContent className="p-6">
+                  <Icon className="h-8 w-8 text-amber-300" />
+                  <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-neutral-300">{item.text}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </section>
+
+        <section className="mt-16">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">Roteiro</p>
+              <h2 className="mt-2 text-3xl font-black md:text-4xl">Dias, cidades e experiências</h2>
+            </div>
+            <Badge className="w-fit rounded-full border border-amber-300/20 bg-amber-400/10 px-4 py-2 text-amber-200">
+              22 de agosto a 07 de setembro
+            </Badge>
+          </div>
+
+          <div className="space-y-4">
+            {itinerary.map((day, index) => {
+              const Icon = day.icon;
+              const isActive = activeDay === index;
+
+              return (
+                <motion.div
+                  key={day.date + day.title}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.03 }}
+                >
+                  <Card
+                    className={`overflow-hidden rounded-3xl border transition-all duration-300 ${
+                      isActive
+                        ? 'border-emerald-400/40 bg-emerald-500/10'
+                        : 'border-white/10 bg-white/5 hover:bg-white/[0.07]'
+                    }`}
+                  >
+                    <CardContent className="p-0">
+                      <button
+                        className="w-full p-5 text-left md:p-6"
+                        onClick={() => setActiveDay(isActive ? -1 : index)}
+                      >
+                        <div className="flex items-start gap-4 md:gap-6">
+                          <div className="min-w-[76px] rounded-2xl bg-white/10 px-3 py-3 text-center">
+                            <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-300">Dia {index + 1}</div>
+                            <div className="mt-1 text-lg font-black">{day.date}</div>
+                          </div>
+
+                          <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-3">
+                              <h3 className="text-xl font-bold md:text-2xl">{day.title}</h3>
+                              <Badge className="rounded-full bg-white/10 text-neutral-200">{day.city}</Badge>
+                            </div>
+                            <p className="mt-2 text-sm leading-6 text-neutral-300 md:text-base">{day.highlight}</p>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <div className={`flex h-11 w-11 items-center justify-center rounded-full ${isActive ? 'bg-emerald-300 text-emerald-950' : 'bg-white/10 text-neutral-200'}`}>
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <ChevronDown className={`hidden h-5 w-5 text-neutral-400 transition-transform md:block ${isActive ? 'rotate-180' : ''}`} />
+                          </div>
+                        </div>
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isActive && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.28 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="border-t border-white/10 px-5 pb-6 pt-5 md:px-6">
+                              <p className="max-w-3xl text-neutral-200 leading-7">{day.desc}</p>
+
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                {day.tags.map((tag) => (
+                                  <Badge key={tag} className="rounded-full bg-white/10 text-neutral-200">{tag}</Badge>
+                                ))}
+                              </div>
+
+                              <div className="mt-6">
+                                {!dailyTips[index] && loadingTipDay !== index && (
+                                  <Button
+                                    onClick={() => handleGenerateTip(index, day)}
+                                    className="rounded-full bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-400"
+                                  >
+                                    <Sparkles className="mr-2 h-4 w-4" />
+                                    Ver dica do dia
+                                  </Button>
+                                )}
+
+                                {loadingTipDay === index && (
+                                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-neutral-200">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    Buscando uma dica especial...
+                                  </div>
+                                )}
+
+                                {dailyTips[index] && (
+                                  <div className="mt-4 rounded-2xl border border-emerald-300/20 bg-emerald-400/10 p-4 text-sm leading-7 text-emerald-50">
+                                    <div className="mb-2 flex items-center gap-2 font-semibold text-amber-200">
+                                      <Sparkles className="h-4 w-4" />
+                                      Dica do dia
+                                    </div>
+                                    <p>{dailyTips[index]}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <Card className="rounded-3xl border-amber-300/20 bg-amber-400/10 text-white">
+            <CardContent className="p-8">
+              <p className="text-sm uppercase tracking-[0.25em] text-amber-200">Bagagem</p>
+              <h3 className="mt-3 text-3xl font-black">Lista inteligente para microclimas</h3>
+              <p className="mt-4 max-w-2xl text-neutral-200 leading-7">
+                Da altitude de Cusco ao deserto de Huacachina, este roteiro passa por cenários muito diferentes. Gere uma sugestão rápida para montar a mala com mais segurança.
+              </p>
+
+              {!packingList ? (
+                <Button
+                  onClick={handleGeneratePackingList}
+                  disabled={isGeneratingPacking}
+                  className="mt-6 rounded-full bg-amber-500 px-5 py-3 text-neutral-950 hover:bg-amber-400"
+                >
+                  {isGeneratingPacking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                  {isGeneratingPacking ? 'Gerando lista...' : 'Gerar lista de bagagem'}
+                </Button>
+              ) : (
+                <div className="mt-6 rounded-2xl bg-black/20 p-5 text-sm leading-7 text-neutral-100 whitespace-pre-wrap">
+                  {packingList}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border-white/10 bg-white/5 text-white overflow-hidden">
+            <div className="h-full">
+              <img
+                src="https://images.unsplash.com/photo-1520613536365-9f32f18b7d44?auto=format&fit=crop&w=1200&q=80"
+                alt="Paisagem andina do Peru"
+                className="h-64 w-full object-cover"
+              />
+              <CardContent className="p-8">
+                <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">Essência da viagem</p>
+                <h3 className="mt-3 text-2xl font-black">Uma rota pensada para sentir o Peru</h3>
+                <p className="mt-4 text-neutral-300 leading-7">
+                  O roteiro combina o peso histórico de Cusco, a grandiosidade da Trilha Inca, a autenticidade do Vale Sagrado, a sofisticação de Arequipa, o mistério de Nazca, a aventura em Huacachina e o fechamento gastronômico em Lima.
+                </p>
+              </CardContent>
+            </div>
+          </Card>
+        </section>
+
+        <section className="mt-16">
+          <Card className="rounded-[2rem] border-amber-300/20 bg-gradient-to-br from-amber-500/10 via-neutral-900 to-neutral-950 text-white overflow-hidden">
+            <CardContent className="p-8 md:p-10">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.25em] text-amber-200">Bourdain Tribute</p>
+                  <h2 className="mt-3 text-3xl font-black md:text-4xl">Inspirados no legado para viver novos sabores</h2>
+                  <p className="mt-4 max-w-3xl text-neutral-300 leading-8">
+                    Uma sessão dedicada aos restaurantes e experiências culinárias que queremos viver no Peru — com destaque para lugares ligados ao olhar de Anthony Bourdain e seu jeito de explorar culturas pela comida.
+                  </p>
+                </div>
+                <Badge className="rounded-full border border-amber-300/40 bg-amber-400/10 px-4 py-2 text-amber-200">
+                  <Utensils className="mr-2 h-4 w-4" />
+                  Sabores, histórias e rua
+                </Badge>
+              </div>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {bourdainTribute.map((item) => (
+                  <div key={item.place} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge className="rounded-full bg-white/10 text-neutral-200">{item.city}</Badge>
+                      <Badge className="rounded-full bg-emerald-500/20 text-emerald-200">{item.type}</Badge>
+                      {item.bourdainSpot && (
+                        <Badge className="rounded-full border border-amber-300/40 bg-amber-300/10 text-amber-200">
+                          Lugar citado por Bourdain
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="mt-3 text-xl font-bold">{item.place}</h3>
+                    <p className="mt-2 text-sm leading-7 text-neutral-300">{item.reason}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="mt-16">
+          <Card className="rounded-[2rem] border-white/10 bg-gradient-to-br from-neutral-900 to-neutral-950 text-white overflow-hidden">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="p-8 md:p-10">
+                <p className="text-sm uppercase tracking-[0.25em] text-amber-200">Fechamento</p>
+                <h2 className="mt-3 text-3xl font-black md:text-4xl">Uma viagem para lembrar por muitos anos</h2>
+                <p className="mt-5 max-w-2xl text-neutral-300 leading-8">
+                  Não é só um roteiro, é uma travessia entre cidades históricas, montanhas, desertos, sabores e encontros. Um site para guardar expectativas agora, e memórias depois.
+                </p>
+              </div>
+              <div className="bg-white/5 p-4 md:p-6">
+                <img
+                  src="image_b011a4.jpg"
+                  alt="Foto de Vitor, Carina, Julia e Kyle juntos"
+                  className="h-full min-h-[320px] w-full rounded-2xl object-cover object-top"
+                  onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" }}
+                />
+              </div>
+            </div>
+          </Card>
+        </section>
       </main>
     </div>
   );
